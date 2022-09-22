@@ -12,5 +12,5 @@ WORKDIR /app
 
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet","PlatformService.dll"]
-# docker build -t fbicsharp/PlatformService .
-#
+# docker build -t fbicsharp/platformservice  .
+# docker image push fbicsharp/platformservice 

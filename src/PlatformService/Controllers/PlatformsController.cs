@@ -5,20 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataService.Http;
 
 namespace PlatformSerice.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PlatformController :ControllerBase
+    public class PlatformsController :ControllerBase
     {
         private readonly IPlatformRepo _repository;
         private readonly IMapper _mapper;
+        private readonly ICommandDataClient _commandDataClient;
 
-        public PlatformController(IPlatformRepo repository,IMapper mapper)
+        public PlatformsController(IPlatformRepo repository,IMapper mapper,ICommandDataClient commandDataClient)
         {
+
             _repository= repository;
             _mapper=mapper;
+            _commandDataClient = commandDataClient;
         }
 
         [HttpGet(Name=nameof(GetPlatforms))]
@@ -42,15 +46,23 @@ namespace PlatformSerice.Controllers
 
 
         [HttpPost(Name=nameof(CreatePlatforms))]
-        public ActionResult<IEnumerable<PlatformReadDto>> CreatePlatforms(PlatformCreateDto newplatform)
+        public async Task<ActionResult<IEnumerable<PlatformReadDto>>> CreatePlatforms(PlatformCreateDto newplatform)
         {
             var platform = _mapper.Map<Platform>(newplatform);
 
             _repository.CreatePlatform(platform);
             _repository.SaveChanges();
-            var platformRead = _mapper.Map<PlatformReadDto>(platform);
+            var platformCreated = _mapper.Map<PlatformReadDto>(platform);
+            try
+            {
+                await _commandDataClient.SendPlatformToCommandAsync(platformCreated);              
+            }
+            catch (System.Exception ex)
+            {                
+                System.Console.WriteLine( ex.Message );
+            }
 
-            return CreatedAtRoute(nameof(CreatePlatforms) , new {Id=platformRead.Id},platformRead);
+            return CreatedAtRoute(nameof(CreatePlatforms) , new {Id=platformCreated.Id},platformCreated);
         }
 
 

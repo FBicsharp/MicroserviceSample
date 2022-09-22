@@ -1,9 +1,9 @@
-apiVersion : apps/v1
-kind : Deployment
-metadata : 
-  name : platforms-depl
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: platform-depl
 spec:
-  replicas: 1 #only one instance
+  replicas: 1 #only one instance fro horizonatl scale
   selector: 
     matchLabels: 
       app: platformservice
@@ -11,10 +11,10 @@ spec:
     metadata: 
       labels: 
         app: platformservice
-  spec:
-    containers: 
-      - name: platformservice
-        image: fbicsharp/platformservice:latest
+    spec:
+      containers: 
+        - name: platformservice
+          image: fbicsharp/platformservice:latest #dockerhub image
 
 
 #kubectl apply -f platform-depl.yaml

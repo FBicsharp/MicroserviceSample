@@ -13,27 +13,3 @@ spec:
       port: 80
       nodePort: 30451
       targetPort: 80
-
-
-# TESTING  SCRIPT AND API
-#1.(lunch deployment) kubectl apply -f commands-np-srv.yaml
-#2.(retive service crated) kubectl get services 
-# note:use the port 31996 for the service name instance
-# NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-# kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP        3h12m
-# platformnpservice-srv   NodePort    10.105.133.181   <none>        80:31996/TCP   36s
-#3.(get exposed ip) kubectl cluster-info
-#
-# Kubernetes control plane is running at https://192.168.49.2:8443
-# CoreDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-#
-#Copy the exposed IP and add the ports http://192.168.49.2:30364
-#
----
-
-# kubectl delete service commandsnpservice-srv
-# kubectl delete deployment commands-depl
-# kubectl apply -f commands-depl.yaml
-# kubectl apply -f commands-np-srv.yaml
-#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.1/deploy/static/provider/cloud/deploy.yaml
-# kubectl get services --namespace=ingress-nginx

@@ -1,0 +1,73 @@
+ 
+#SET STARTED
+#Starting minikube https://minikube.sigs.k8s.io/docs/start/
+#cmd  minikube start
+
+
+#DEPLOYMENT 
+move_to_K8S:
+  lunch:
+    - cmd: kubectl apply -f commands-depl.yaml #start a pod for image command
+    - cmd: kubectl apply -f platform-depl.yaml
+    
+help_command:
+  check_active_deployment: kubectl get deployments
+    #returns the following
+    # NAME            READY   UP-TO-DATE   AVAILABLE   AGE
+    # platform-depl   3/3     3            3           40m
+  check_pod: kubectl get pod 
+    #returns the following that show the instance of the pod with the state
+    # Note the is 3 instances under cration when creation il complate thy comes "Running"
+    # NAME                             READY   STATUS              RESTARTS   AGE
+    # platform-depl-587675c5b9-2phhm   0/1     ContainerCreating   0          3s
+    # platform-depl-587675c5b9-tgbt7   0/1     ContainerCreating   0          3s
+    # platform-depl-587675c5b9-x62pd   0/1     ContainerCreating   0          3s
+    #if you remove a pod they will be recreated automatically from kubernetes
+  delete_deployment: kubectl delete deployment platform-depl
+  force_refrash_image_under_deployment: kubectl rollout restart deployment commands-depl
+  
+
+
+
+#NODE PORT
+move_to_K8S:
+  lunch:
+    - cmd: kubectl apply -f platform-np-srv.yaml #expose a specific port of cluster
+    - cmd: kubectl apply -f commands-np-srv.yaml #expose a specific port of cluster
+    
+help_command:
+  check_services: kubectl get services 
+    # note:use the port 31996 for the service name instance, in thi case the public port is 31996
+    # NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+    # kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP        3h12m
+    # platformnpservice-srv   NodePort    10.105.133.181   <none>        80:31996/TCP   36s
+  delete_service: kubectl delete service commandsnpservice-srv
+  get_service_under_namespace: get services --namespace=ingress-nginx
+
+  cluster_info: kubectl cluster-info
+    # returning the claster information helpfull for get ip, i this case 192.168.49.2
+    # Kubernetes control plane is running at https://192.168.49.2:8443
+    # CoreDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+  testing_api_call: 0 #Copy the exposed IP and add the ports http://192.168.49.2:31996
+
+
+
+#INGRESS for load balancing
+
+move_to_K8S:
+  eneble_ingress_on_minikube : minikube addons enable ingress # WARNING BE SURE THET MINIKUBE HAVE INGRESS ENABLE
+  install_ingress_nginx: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.1/deploy/static/provider/cloud/deploy.yaml
+  mapping_host: sudo nano /etc/hosts #and add 127.0.0.1 acme.com
+  lunch:
+    - cmd: kubectl apply -f ingress-srv.yaml
+
+
+
+help_command:
+  delete_ingress: kubectl delete  ingress ingress-srv
+  restart_ingress: kubectl -n ingress-nginx rollout restart deploy
+  
+
+# WARNING BE SURE THET MINIKUBE HAVE INGRESS ENABLE
+# minikube addons enable ingress kubectl delete  ingress ingress-srv

@@ -12,16 +12,12 @@ namespace CommandsService.Controllers
             
         }
 
-
-
-
         [HttpPost]
         public ActionResult TestinboundConnection()
         {
             System.Console.WriteLine( "Inbound post"  ); 
             return Ok("Inbound post");
         }
-
 
     }
 }

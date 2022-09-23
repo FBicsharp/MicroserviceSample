@@ -1,31 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: platform-depl
+  name: commands-depl
 spec:
   replicas: 1 #number of instance for scaling
   selector: 
     matchLabels: 
-      app: platformservice
+      app: commandsservice
   template: 
     metadata: 
       labels: 
-        app: platformservice
+        app: commandsservice
     spec:
       containers: 
-        - name: platformservice
-          image: fbicsharp/platformservice:latest #dockerhub image
+        - name: commandsservice
+          image: fbicsharp/commandsservice:latest #dockerhub image
 ---
+#clusterip 
 apiVersion: v1
 kind: Service
 metadata: 
-  name: platforms-clusterip-srv
+  name: commands-clusterip-srv
 spec: 
   type: ClusterIP
   selector: 
-    app: platformservice
+    app: commandsservice
   ports: 
-  - name: platformservice
+  - name: commandsservice
     protocol: TCP
     port: 80
     targetPort: 80
@@ -36,27 +37,19 @@ spec:
 
 # TESTING AND EXLLANING  SCRIPT 
 #minikube start
-#1.(lunch deployment) kubectl apply -f platform-depl.yaml
+#1.(lunch deployment) kubectl apply -f commands-depl.yaml
 #2.(retive the deployment) kubectl get deployments 
 # in this case I configured 3 instances
 # NAME            READY   UP-TO-DATE   AVAILABLE   AGE
 # platform-depl   3/3     3            3           40m
-#3.(get the pod ) kubectl get pods
+#3.(get the pod ) kubectl get pod
 # Note the is 3 instances under cration when creation il complate thy comes "Running"
 # NAME                             READY   STATUS              RESTARTS   AGE
 # platform-depl-587675c5b9-2phhm   0/1     ContainerCreating   0          3s
 # platform-depl-587675c5b9-tgbt7   0/1     ContainerCreating   0          3s
 # platform-depl-587675c5b9-x62pd   0/1     ContainerCreating   0          3s
 #if you remove a pod they will be recreated automatically
-# Note the is 3 instances under cration when creation il complate thy comes "Running"
-# NAME                             READY   STATUS              RESTARTS   AGE
-# platform-depl-587675c5b9-2phhm   0/1     ContainerCreating   0          3s
-# platform-depl-587675c5b9-tgbt7   0/1     ContainerCreating   0          3s
-# platform-depl-587675c5b9-x62pd   0/1     ContainerCreating   0          3s
-#if you remove a pod they will be recreated automatically
-
-#3.(get the services ) kubectl get services
-
-
 #4.(delete the deployment by name) kubectl delete deployment platform-depl
 
+#kubectl rollout restart deployment commands-depl
+#kubectl rollout restart deployment platform-depl

@@ -46,7 +46,7 @@ help_command:
     # kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP        3h12m
     # platformnpservice-srv   NodePort    10.105.133.181   <none>        80:31996/TCP   36s
   delete_service: kubectl delete service commandsnpservice-srv
-  get_service_under_namespace: get services --namespace=ingress-nginx
+  get_service_under_namespace: kubectl get services --namespace=ingress-nginx
 
   cluster_info: kubectl cluster-info
     # returning the claster information helpfull for get ip, i this case 192.168.49.2
@@ -67,7 +67,7 @@ move_to_K8S:
     - cmd: kubectl apply -f ingress-srv.yaml
 
 help_command:
-  delete_ingress: kubectl delete  ingress ingress-srv
+  delete_ingress:  kubectl delete  ingress ingress-srv
   restart_ingress: kubectl -n ingress-nginx rollout restart deploy
 
 

@@ -1,0 +1,9 @@
+namespace CommandsService.EventProcessing
+{
+    // enum EnumEventType
+    // {
+    //     PlatformPublisched,
+    //     Undetermined,
+    // }
+
+}

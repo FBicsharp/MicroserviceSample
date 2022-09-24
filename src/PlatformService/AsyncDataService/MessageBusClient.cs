@@ -14,10 +14,10 @@ namespace PlatformService.AsyncDataService
         public MessageBusClient(IConfiguration configuration)
         {           
             _configuration=configuration;
-            setupRabbitConnection();
+            InitializeRabbitConnection();
         }
 
-        private void setupRabbitConnection()
+        private void InitializeRabbitConnection()
         {
              var rabbitMQfactory = new ConnectionFactory()
             {
@@ -72,7 +72,7 @@ namespace PlatformService.AsyncDataService
         public void Dispose()
         {
             System.Console.WriteLine($"-->Message bus disposed");
-            if (_connection.IsOpen)
+            if (_channel.IsOpen)
             {
                 _channel.Close();
                 _connection.Close();                

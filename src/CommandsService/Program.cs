@@ -1,22 +1,43 @@
-var builder = WebApplication.CreateBuilder(args);
+using CommandsService.Data;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+var DevelopmentMode = builder.Environment.IsDevelopment() ;
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// if (DevelopmentMode)
+// {
+    builder.Services.AddDbContext<AppDbContext>(opt=>
+        opt.UseInMemoryDatabase("InMemDb"));    
+    Console.WriteLine("--> Using InMemoryDb");
+// }
+// else
+// {
+//     builder.Services.AddDbContext<AppDbContext>(opt=>
+//         opt.UseSqlServer(configuration.GetConnectionString("CommandsConnection")));
+//     Console.WriteLine("--> Using UseSqlServerDb");
+// } 
+
+builder.Services.AddScoped<ICommandRepo, CommandRepo>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+if (DevelopmentMode || bool.Parse(configuration["EnableSwaggerUi"] ))
 {
-}
     app.UseSwagger();
     app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
+}
+if (bool.Parse(configuration["HttpsRedirection"]))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

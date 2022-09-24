@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PlatformService.AsyncDataService;
 using PlatformService.Data;
+using PlatformService.SyncDataService.Grpc;
 using PlatformService.SyncDataService.Http;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,7 @@ builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
 builder.Services.AddSingleton<IMessageBusClient,MessageBusClient>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddGrpc();
 
 
 var app = builder.Build();
@@ -47,6 +48,14 @@ if (bool.Parse(configuration["HttpsRedirection"]))
 app.UseAuthorization();
 
 app.MapControllers();
-PreDb.PrepPopulation(app,DevelopmentMode);
+app.MapGrpcService<GrpcPlatformService>();
+app.MapGet("/protos/platforms.proto", ()=>   
+{
+    var path = "Protos/platforms.proto";
+    var content = System.IO.File.Exists(path)? System.IO.File.ReadAllText("Protos/platforms.proto"): string.Empty ;
+    return content;
+});
+
+//PreDb.PrepPopulation(app,DevelopmentMode);
 
 app.Run();

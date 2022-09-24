@@ -19,7 +19,7 @@ if (DevelopmentMode)
 else
 {
     builder.Services.AddDbContext<AppDbContext>(opt=>
-        opt.UseSqlServer(configuration.GetConnectionString("Platforms")));
+        opt.UseSqlServer(configuration.GetConnectionString("PlatformsConnection")));
     Console.WriteLine("--> Using UseSqlServerDb");
 } 
 

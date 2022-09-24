@@ -6,14 +6,27 @@ namespace PlatformService.Data
     public static class PreDb
     {
         public static void PrepPopulation(IApplicationBuilder app,bool isDevelopment)
-        {
+        {            
             using var serviceScope = app.ApplicationServices.CreateScope();
             var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
-            SeedData(context);
+            ValidateConnectionString(context);
+            
             if(!isDevelopment)
                 ApplyMigrations(context);
+
+            SeedData(context);
             
         }
+
+        private static void ValidateConnectionString(AppDbContext? context)
+        {
+            if (string.IsNullOrEmpty(context.Database.GetConnectionString())) 
+            {
+                System.Console.WriteLine("-->Connection string not setted");
+            }
+            System.Console.WriteLine("-->Connection string setted");
+        }
+
         private static void SeedData(AppDbContext context)
         {
             if (!context.Platforms.Any())

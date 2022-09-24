@@ -7,8 +7,8 @@
 #DEPLOYMENT 
 move_to_K8S:
   lunch:
-    - cmd: kubectl apply -f commands-depl.yaml #start a pod for image command
     - cmd: kubectl apply -f platform-depl.yaml
+    - cmd: kubectl apply -f commands-depl.yaml #start a pod for image command
     - cmd: kubectl apply -f mssql-plat-depl.yaml
     
 help_command:
@@ -26,7 +26,7 @@ help_command:
     #if you remove a pod they will be recreated automatically from kubernetes
   delete_deployment: kubectl delete deployment platform-depl
   force_refrash_image_under_deployment: kubectl rollout restart deployment commands-depl
-  
+                                        kubectl rollout restart deployment platform-depl
 
 
 
@@ -97,5 +97,5 @@ move_to_K8S:
   create_secret:  kubectl create secret generic <keysceret> --from-literal=<key>=<value>
   check_secret:  kubectl get secret
   
-  # docker exec -u 0 -it <container> /bin
+  # docker exec -u 0 -it <container> /bin/bash
   

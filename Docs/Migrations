@@ -1,0 +1,8 @@
+#installing Entityframework commands
+dotnet tool install --global dotnet-ef
+
+#update version
+dotnet tool update --global dotnet-ef
+
+#do a migration
+dotnet ef migrations add FirstMigration

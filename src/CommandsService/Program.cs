@@ -1,6 +1,7 @@
 using CommandsService.AsyncDataService;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
+using CommandsService.SyncDataService.Grpc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,7 @@ builder.Services.AddScoped<ICommandRepo, CommandRepo>();
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IGrpcPlatformDataClient,GrpcPlatformDataClient>();
 
 
 var app = builder.Build();
@@ -46,5 +48,5 @@ if (bool.Parse(configuration["HttpsRedirection"]))
 app.UseAuthorization();
 
 app.MapControllers();
-
+PrepDb.PrepPopulation(app,DevelopmentMode);
 app.Run();

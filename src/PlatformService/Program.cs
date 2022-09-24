@@ -56,6 +56,6 @@ app.MapGet("/protos/platforms.proto", ()=>
     return content;
 });
 
-//PreDb.PrepPopulation(app,DevelopmentMode);
+PreDb.PrepPopulation(app,DevelopmentMode);
 
 app.Run();

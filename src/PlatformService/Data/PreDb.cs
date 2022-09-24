@@ -9,10 +9,12 @@ namespace PlatformService.Data
         {            
             using var serviceScope = app.ApplicationServices.CreateScope();
             var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
-            ValidateConnectionString(context);
             
             if(!isDevelopment)
+            {
+                ValidateConnectionString(context);
                 ApplyMigrations(context);
+            }
 
             SeedData(context);
             

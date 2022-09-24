@@ -10,6 +10,7 @@ move_to_K8S:
     - cmd: kubectl apply -f platform-depl.yaml
     - cmd: kubectl apply -f commands-depl.yaml #start a pod for image command
     - cmd: kubectl apply -f mssql-plat-depl.yaml
+    - cmd: kubectl apply -f rabbitmq-depl.yaml
     
 help_command:
   check_active_deployment: kubectl get deployments
@@ -24,6 +25,8 @@ help_command:
     # platform-depl-587675c5b9-tgbt7   0/1     ContainerCreating   0          3s
     # platform-depl-587675c5b9-x62pd   0/1     ContainerCreating   0          3s
     #if you remove a pod they will be recreated automatically from kubernetes
+  ispect_log_pod: kubectl logs <podNAME>
+
   delete_deployment: kubectl delete deployment platform-depl
   force_refrash_image_under_deployment: kubectl rollout restart deployment commands-depl
                                         kubectl rollout restart deployment platform-depl
@@ -99,3 +102,4 @@ move_to_K8S:
   
   # docker exec -u 0 -it <container> /bin/bash
   
+resolve_pending externalIP: minikube tunnel

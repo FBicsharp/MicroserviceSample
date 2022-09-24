@@ -11,6 +11,7 @@ namespace PlatformSerice.Profiles
             //source -->target
             CreateMap<Platform, PlatformReadDto>();            
             CreateMap<PlatformCreateDto, Platform>();            
+            CreateMap<Platform, PlatformPublishDto>();            
         }
     }
 }

@@ -9,6 +9,7 @@ move_to_K8S:
   lunch:
     - cmd: kubectl apply -f commands-depl.yaml #start a pod for image command
     - cmd: kubectl apply -f platform-depl.yaml
+    - cmd: kubectl apply -f mssql-plat-depl.yaml
     
 help_command:
   check_active_deployment: kubectl get deployments
@@ -62,12 +63,39 @@ move_to_K8S:
   lunch:
     - cmd: kubectl apply -f ingress-srv.yaml
 
-
-
 help_command:
   delete_ingress: kubectl delete  ingress ingress-srv
   restart_ingress: kubectl -n ingress-nginx rollout restart deploy
-  
+
 
 # WARNING BE SURE THET MINIKUBE HAVE INGRESS ENABLE
 # minikube addons enable ingress kubectl delete  ingress ingress-srv
+
+
+
+
+#VOLUME 
+
+move_to_K8S:  
+  lunch:
+    - cmd: kubectl apply -f local-pvc.yaml
+
+help_command:
+  cmd1:  kubectl get storageclass
+  cmd2:  kubectl get pvc
+    #NAME          STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+    #mmsql-claim   Bound    pvc-fc1d5a22-387a-4368-a8c8-28da473e2a9f   200Mi      RWX            standard       81s
+  
+
+
+#SECRETS
+move_to_K8S:  
+  lunch:
+    - cmd: kubectl create secret generic mssql --from-literal=SA_PASSWORD="Pa555w0rd!"
+
+  help_command:
+  create_secret:  kubectl create secret generic <keysceret> --from-literal=<key>=<value>
+  check_secret:  kubectl get secret
+  
+  # docker exec -u 0 -it <container> /bin
+  

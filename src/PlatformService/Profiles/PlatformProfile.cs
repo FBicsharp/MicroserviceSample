@@ -1,6 +1,6 @@
 using AutoMapper;
 using PlatformService.Dtos;
-using PlatformService.Grpc;
+using PlatformService;
 using PlatformService.Models;
 
 namespace PlatformSerice.Profiles

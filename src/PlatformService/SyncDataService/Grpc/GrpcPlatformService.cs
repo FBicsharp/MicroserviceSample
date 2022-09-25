@@ -1,37 +1,32 @@
-
-
+using System.Threading.Tasks;
 using AutoMapper;
 using Grpc.Core;
 using PlatformService.Data;
-using PlatformService.Grpc;
 
-namespace PlatformService.SyncDataService.Grpc
-{   
-    public  class GrpcPlatformService : GrpcPlatform.GrpcPlatformBase
+namespace PlatformService.SyncDataServices.Grpc
+{
+    public class GrpcPlatformService : GrpcPlatform.GrpcPlatformBase
     {
-        private readonly IPlatformRepo _platformRepo;
+        private readonly IPlatformRepo _repository;
         private readonly IMapper _mapper;
 
-        public GrpcPlatformService(IPlatformRepo platformRepo,IMapper mapper)
+        public GrpcPlatformService(IPlatformRepo repository, IMapper mapper)
         {
-            _platformRepo= platformRepo;
+            _repository = repository;
             _mapper = mapper;
         }
 
-        public override Task<PlatformResponse> GetAllPlatforms(GetAllRequest request, ServerCallContext serverCallContext)
+        public override Task<PlatformResponse> GetAllPlatforms(GetAllRequest request, ServerCallContext context)
         {
             var response = new PlatformResponse();
-            var platformItems= _platformRepo.GetAllPlatform();
-            foreach (var platform in platformItems)
+            var platforms = _repository.GetAllPlatform();
+
+            foreach(var plat in platforms)
             {
-                response.Platform.Add(_mapper.Map<GrpcPlatformModel>(platform));
-                
+                response.Platform.Add(_mapper.Map<GrpcPlatformModel>(plat));
             }
+
             return Task.FromResult(response);
         }
-
-
-
     }
-    
 }

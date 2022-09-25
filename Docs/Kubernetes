@@ -103,3 +103,7 @@ move_to_K8S:
   # docker exec -u 0 -it <container> /bin/bash
   
 resolve_pending externalIP: minikube tunnel
+#add dotnet dev certificate for linuz only
+# dotnet dev-certs https
+# sudo -E dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+# sudo update-ca-certificates
